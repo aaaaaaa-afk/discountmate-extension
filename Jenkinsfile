@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo 'Build is not implemented yet.'
+                bat 'dotnet publish App/DiscountMate/DiscountMate.csproj -c Release -o BuildOutput'
+                archiveArtifacts 'BuildOutput/**'
             }
         }
 
