@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px 20px;
+            text-align: left;
+            border-bottom: 1px solid #cccccc;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>DiscountMate</title>
+
+    <script src="app.js" defer></script>
+</head>
+
+<body>
+    <h1>DiscountMate</h1>
+
+    <p>All prices and nutrition values are randomly generated.</p>
+
+    <h2>Products</h2>
+
+    <form id="search-form">
+        <div class="form-field">
+            <label for="search-input">Search by product name:</label>
+
+            <input type="search" id="search-input" placeholder="For example, rice">
+        </div>
+
+        <div class="form-field">
+            <label for="sort-order">Sort by cheapest store price:</label>
+
+            <select id="sort-order">
+                <option value="">Default order</option>
+                <option value="price-ascending">Lowest to highest</option>
+                <option value="price-descending">Highest to lowest</option>
+            </select>
+        </div>
+
+        <label class="checkbox-label" for="high-protein">
+            <input type="checkbox" id="high-protein">
+            Protein above 30 g per 100 g
+        </label>
+
+        <button type="submit">Apply</button>
+        <button type="button" id="clear-search">Show all</button>
+    </form>
+
+    <p id="status" role="status">Loading products...</p>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Pack size</th>
+                    <th scope="col">Energy per 100 g</th>
+                    <th scope="col">Protein per 100 g</th>
+                    <th scope="col">Safepath Supermarket</th>
+                    <th scope="col">Coals &amp; Co</th>
+                </tr>
+            </thead>
+
+            <tbody id="product-rows"></tbody>
+        </table>
+    </div>
+
+    <h2>Shopping cart</h2>
+
+    <p>
+        Quantities are packs. This demonstration uses one shared cart,
+        which resets when the application stops.
+    </p>
+
+    <p id="cart-status" role="status">Loading cart...</p>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Store</th>
+                    <th scope="col">Pack size</th>
+                    <th scope="col">Price per pack</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Line total</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="cart-rows"></tbody>
+        </table>
+    </div>
+
+    <p class="cart-total">
+        <strong>
+            Cart total:
+            <span id="cart-total">—</span>
+        </strong>
+    </p>
+</body>
+
+</html>
