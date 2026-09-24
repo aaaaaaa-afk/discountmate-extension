@@ -17,7 +17,15 @@ pipeline {
 
         stage('Code Quality') {
             steps {
-                echo 'Code quality analysis is not configured yet.'
+                script {
+                     def scannerHome = tool 'SonarScanner for .NET'
+
+                    withSonarQubeEnv('LocalSonar') {
+                        bat "dotnet \"${scannerHome}\\SonarScanner.MSBuild.dll\" begin /k:\"discountmate\" /d:sonar.exclusions=\"BuildOutput/**\""
+                        bat 'dotnet build App/DiscountMate/DiscountMate.csproj -c Release --no-incremental'
+                        bat "dotnet \"${scannerHome}\\SonarScanner.MSBuild.dll\" end"
+                    }
+                }
             }
         }
 
