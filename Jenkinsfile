@@ -18,12 +18,14 @@ pipeline {
         stage('Code Quality') {
             steps {
                 script {
-                     def scannerHome = tool 'SonarScanner for .NET'
+                    def scannerHome = tool 'SonarScanner for .NET'
 
-                    withSonarQubeEnv('LocalSonar') {
-                        bat "dotnet \"${scannerHome}\\SonarScanner.MSBuild.dll\" begin /k:\"discountmate\" /d:sonar.exclusions=\"BuildOutput/**\""
-                        bat 'dotnet build App/DiscountMate/DiscountMate.csproj -c Release --no-incremental'
-                        bat "dotnet \"${scannerHome}\\SonarScanner.MSBuild.dll\" end"
+                    withEnv(["SCANNER_HOME=${scannerHome}"]) {
+                        withSonarQubeEnv('LocalSonar') {
+                            bat '@dotnet "%SCANNER_HOME%\\SonarScanner.MSBuild.dll" begin /k:"discountmate" /d:sonar.host.url="%SONAR_HOST_URL%" /d:sonar.token="%SONAR_AUTH_TOKEN%" /d:sonar.exclusions="BuildOutput/**"'
+                            bat 'dotnet build App/DiscountMate/DiscountMate.csproj -c Release --no-incremental'
+                            bat '@dotnet "%SCANNER_HOME%\\SonarScanner.MSBuild.dll" end /d:sonar.token="%SONAR_AUTH_TOKEN%"'
+                        }
                     }
                 }
             }
