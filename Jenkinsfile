@@ -96,7 +96,12 @@ pipeline {
 
         stage('Monitoring') {
             steps {
-                echo 'Monitoring and alerting are not configured yet.'
+                // check existing kuma container is running
+                bat 'docker start discountmate-monitor'
+                // dashboard check responses
+                bat 'curl.exe --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 --max-time 5 --output NUL http://localhost:3001/'
+
+                echo 'Uptime Kuma: http://localhost:3001'
             }
         }
     }
