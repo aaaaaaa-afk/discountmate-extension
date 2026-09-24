@@ -33,7 +33,8 @@ pipeline {
 
         stage('Security') {
             steps {
-                echo 'Security scanning is not configured yet.'
+                //NuGet Audit is a tool that checks for known vulnerabilities in NuGet packages. The command below restores the test project and checks for vulnerabilities in all packages, treating any warnings as errors.
+                bat 'dotnet restore Tests/DiscountMate.Tests.csproj --force -p:NuGetAudit=true -p:NuGetAuditMode=all -p:NuGetAuditLevel=low -warnaserror'
             }
         }
 
