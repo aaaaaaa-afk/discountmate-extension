@@ -1,6 +1,9 @@
 pipeline {
     agent any
 
+    options {
+        disableConcurrentBuilds()
+    }
     stages {
         stage('Build') {
             steps {
@@ -67,7 +70,27 @@ pipeline {
 
         stage('Release') {
             steps {
-                echo 'Production release is not configured yet.'
+                // release label with bbuild number
+                bat 'docker tag discountmate:test discountmate:release-%BUILD_NUMBER%'
+
+                // check if previous container exists remove if do
+                script {
+                    def containerExists = bat(
+                        script: 'docker container inspect discountmate-production >nul 2>&1',
+                        returnStatus: true
+                    )
+
+                // remove previous container if it exists. New container start with same name, so the old one must be removed first
+                if (containerExists == 0) {
+                bat 'docker rm -f discountmate-production'
+                }
+            }
+
+                // start container with localhost:5082 mapping to 8080 set as production environment
+                bat 'docker run -d --name discountmate-production -e ASPNETCORE_ENVIRONMENT=Production -p 127.0.0.1:5082:8080 discountmate:release-%BUILD_NUMBER%'
+
+                // check app is running and responding 
+                bat 'curl.exe --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 --max-time 5 --output NUL http://localhost:5082/'
             }
         }
 
