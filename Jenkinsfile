@@ -25,7 +25,7 @@ pipeline {
 
                     withEnv(["SCANNER_HOME=${scannerHome}"]) {
                         withSonarQubeEnv('LocalSonar') {
-                            bat '@dotnet "%SCANNER_HOME%\\SonarScanner.MSBuild.dll" begin /k:"discountmate" /d:sonar.host.url="%SONAR_HOST_URL%" /d:sonar.token="%SONAR_AUTH_TOKEN%" /d:sonar.exclusions="BuildOutput/**"'
+                            bat '@dotnet "%SCANNER_HOME%\\SonarScanner.MSBuild.dll" begin /k:"discountmate" /d:sonar.host.url="%SONAR_HOST_URL%" /d:sonar.token="%SONAR_AUTH_TOKEN%" /d:sonar.exclusions="BuildOutput/**" /d:sonar.qualitygate.wait=true'
                             bat 'dotnet build App/DiscountMate/DiscountMate.csproj -c Release --no-incremental'
                             bat '@dotnet "%SCANNER_HOME%\\SonarScanner.MSBuild.dll" end /d:sonar.token="%SONAR_AUTH_TOKEN%"'
                         }
