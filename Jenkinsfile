@@ -87,7 +87,7 @@ pipeline {
             }
 
                 // start container with localhost:5082 mapping to 8080 set as production environment
-                bat 'docker run -d --name discountmate-production -e ASPNETCORE_ENVIRONMENT=Production -p 127.0.0.1:5082:8080 discountmate:release-%BUILD_NUMBER%'
+                bat 'docker run -d --name discountmate-production --network discountmate-network -e ASPNETCORE_ENVIRONMENT=Production -p 127.0.0.1:5082:8080 discountmate:release-%BUILD_NUMBER%'
 
                 // check app is running and responding 
                 bat 'curl.exe --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 --max-time 5 --output NUL http://localhost:5082/'
