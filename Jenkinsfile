@@ -40,7 +40,28 @@ pipeline {
 
         stage('Deployment') {
             steps {
-                echo 'Test deployment is not configured yet.'
+                // use docker image to build app and run in container
+                bat 'docker build -t discountmate:test .'
+
+                // remove the previous test container if one exists.
+                script {
+                    def containerExists = bat(
+                        script: 'docker container inspect discountmate-test >nul 2>&1',
+                        returnStatus: true
+                    )
+
+                    if (containerExists == 0) {
+                    bat 'docker rm -f discountmate-test'
+                }
+            }
+
+            // start application at localhost:5081
+            bat 'docker run -d --name discountmate-test -p 127.0.0.1:5081:8080 discountmate:test'
+
+            // check that the application is running and responding to requests
+            // retry up to 10 times, with a 2 second delay between attempts, and a maximum time of 5 seconds for each request
+            // not respoinding  = fail
+            bat 'curl.exe --fail --silent --show-error --retry 10 --retry-connrefused --retry-delay 2 --max-time 5 --output NUL http://localhost:5081/'
             }
         }
 
